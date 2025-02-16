@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import { Checkbox } from "./ui/checkbox"
+import axios from "axios"
 
 interface CleaningRecord {
   id: string
@@ -21,11 +22,25 @@ interface CleaningDashboardProps {
 export default function CleaningDashboard({ initialRecords }: CleaningDashboardProps) {
   const [records, setRecords] = useState<CleaningRecord[]>(initialRecords)
 
-  const toggleCompleted = (id: string) => {
+  const toggleCompleted = async (email: string) => {
+    // Update state optimistically
     setRecords(records.map(record =>
-      record.id === id ? { ...record, completed: !record.completed } : record
+      record.email === email ? { ...record, completed: !record.completed } : record
     ))
+  
+    try {
+      await axios.post("https://cleanit-backs.onrender.com/api/status", {
+        
+        email, // Use email to identify the user
+        status: "completed", // Update status
+        
+      })
+    } catch (error) {
+      console.error("Error updating status:", error)
+    }
   }
+  
+   
 
   return (
     <div className="container mx-auto p-6">
@@ -66,7 +81,7 @@ export default function CleaningDashboard({ initialRecords }: CleaningDashboardP
                   <TableCell>
                     <Checkbox
                       checked={record.completed}
-                      onCheckedChange={() => toggleCompleted(record.id)}
+                      onCheckedChange={() => toggleCompleted(record.email)}
                     />
                   </TableCell>
                 </TableRow>

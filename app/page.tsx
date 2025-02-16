@@ -14,10 +14,10 @@ export default async function Home() {
     const cleaningRecords = users.map(user => ({
       id: user._id.toString(), // Use `_id` for MongoDB
       name: user.name,
-      time: user.createdAt.toLocaleTimeString(),
+      time: user.updatedAt.toLocaleTimeString(),
       roomNo: user.roomno,
       email: user.email,
-      completed: false // Adjust based on your schema
+      completed: false  
     }));
 
     return <CleaningDashboard initialRecords={cleaningRecords} />;
