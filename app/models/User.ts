@@ -34,9 +34,21 @@ const userSchema = new Schema(
       required: true,
     },
     requestType: {
-      type: String,
-      enum: ["Cleaning", "Maintenance", "Nothing"],
-      default: "Nothing",
+      type: [String], // Now an array to allow multiple selections
+      enum: ["Cleaning", "Maintenance"], // Removed "Nothing", as an empty array represents no request
+      default: [], // Default to an empty array (no requests)
+    },
+    status: {
+      cleaning: {
+        type: String,
+        enum: ["pending", "completed", "not_requested"],
+        default: "not_requested",
+      },
+      maintenance: {
+        type: String,
+        enum: ["pending", "completed", "not_requested"],
+        default: "not_requested",
+      },
     },
     image: {
       public_id: {
@@ -53,4 +65,3 @@ const userSchema = new Schema(
 );
 
 export default mongoose.models.User || mongoose.model("User", userSchema);
-
